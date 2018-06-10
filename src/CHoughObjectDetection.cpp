@@ -50,12 +50,13 @@ Mat* CHoughObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 	}
 
 	vector<cv::Vec2f> Lines;
-	cv::HoughLines(mBin, Lines,
+	cv::HoughLines(BinImage, Lines,
 			(double)this->mRho,
 			(double)this->mTheta,
 			this->mVoteThresh);
 
 	SrcImage->copyTo(*DstImage);
+
 	for (int index = 0; index < (int)Lines.size(); index++) {
 		float rho = Lines[index][0];
 		float theta = Lines[index][0];
