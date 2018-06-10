@@ -13,6 +13,7 @@
 #include "opencv/cv.hpp"
 #include "opencv2/highgui.hpp"
 #include "CDetectObject.h"
+#include "CHoughObjectDetection.h"
 #include "CImageWindow.h"
 using namespace std;
 
@@ -39,7 +40,9 @@ int main(int argc, char** argv) {
 		argv++;
 	}
 
-	CDetectObject DetectObject;
+	//CDetectObject DetectObject(5, 180, 255);
+	CDetectObject *DetectObject = new CHoughObjectDetection(5, 180, 255);
+	((CHoughObjectDetection*)DetectObject)->SetConfig(CHoughObjectDetection::DETECT_OBJECT_HOUGH_CONFIG_THRESH, 300);
 	CVideoReader VideoReader(InputFile);
 	CVideoWriter VideoWriter(OutputFile,
 			VideoReader.getImageWidth(),
@@ -64,7 +67,7 @@ int main(int argc, char** argv) {
 	for (int index = 0; index < VideoReader.getImageFrameNum(); index++) {
 
 		CaptureImgae = VideoReader.Read();
-		DetectObject.Find((const Mat*)(&CaptureImgae), (const Mat*)(&DetectedImage));
+		DetectObject->Find((const Mat*)(&CaptureImgae), (const Mat*)(&DetectedImage));
 
 		CapImageWindow.Show(CaptureImgae);
 		DetectedImageWindow.Show(DetectedImage);
@@ -73,6 +76,8 @@ int main(int argc, char** argv) {
 
 		cv::waitKey(1000 / VideoReader.getImageFps());
 	}
+
+	delete DetectObject;
 
 	cout << "End Program!" << endl;
 

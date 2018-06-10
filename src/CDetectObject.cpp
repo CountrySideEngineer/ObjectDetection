@@ -27,6 +27,15 @@ CDetectObject::CDetectObject(int FilterSize, int Thresh, int MaxValue)
 {}
 
 /**
+ * Destructor.
+ */
+CDetectObject::~CDetectObject() {
+	//destroyWindow("Gray");
+	//destroyWindow("Filtered");
+	//destroyWindow("Bin");
+}
+
+/**
  * Detect and mark traffic object.
  *
  * @param[in]	Source image to scan.
@@ -40,10 +49,13 @@ Mat* CDetectObject::Find(const Mat* SrcImage, const Mat* DstImage) {
 	 * To accentuate the edge of border, convert the input image into
 	 * 2 value scale, black and white.
 	 */
-	Size Filter(this->mFilterSize, this->mFilterSize);
-	cvtColor(*SrcImage, mGray, COLOR_BGR2GRAY);
-	blur(mGray, mFiltered, Filter);
-	threshold(mFiltered, mBin, this->mThresh, this->mMaxValue, THRESH_BINARY);
+	Mat BinImage;
+	Mat* ConvertedImage;
+
+	ConvertedImage = this->Convert2Bin(SrcImage, (Mat*)(&BinImage));
+	if (ConvertedImage != (Mat*)(&BinImage)) {
+		cerr << "Image output err" << endl;
+	}
 
 	vector< vector<Point> > Contours;
 	findContours(mBin, Contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
@@ -52,6 +64,32 @@ Mat* CDetectObject::Find(const Mat* SrcImage, const Mat* DstImage) {
 	for (unsigned int index = 0; index < Contours.size(); index++) {
 		drawContours((Mat&)*DstImage, Contours, index, Scalar(0, 0, 255), 1);
 	}
+
+	//cv::imshow(cv::String("Gray"), this->mGray);
+	//cv::imshow(cv::String("Filtered"), this->mFiltered);
+	//cv::imshow(cv::String("Bin"), this->mBin);
+
+	return (Mat*)DstImage;
+}
+
+/**
+ * Basic, common sequence to convert input image into bin-level image.
+ * The sequence run in this method is that convert color image into gray
+ * scale, filtering by Blur filter, and convert into bin-level image.
+ *
+ * @parma[in]	SrcImage	input image.
+ * @param[out]	DstImage	Pointer to output image.
+ */
+Mat* CDetectObject::Convert2Bin(const Mat* SrcImage, Mat* DstImage) {
+	assert(NULL != SrcImage);
+	assert(NULL != DstImage);
+
+	Size Filter(this->mFilterSize, this->mFilterSize);
+	cvtColor(*SrcImage, mGray, COLOR_BGR2GRAY);
+	blur(mGray, mFiltered, Filter);
+	threshold(mFiltered, mBin, this->mThresh, this->mMaxValue, THRESH_BINARY);
+
+	this->mBin.copyTo(*DstImage);
 
 	return (Mat*)DstImage;
 }

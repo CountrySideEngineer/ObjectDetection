@@ -20,12 +20,15 @@ public:
 	};
 
 	CDetectObject(int FilterSize = 5, int Thresh = 127, int MaxValue = 255);
-	virtual ~CDetectObject() {}
+	virtual ~CDetectObject();
 
 	virtual Mat* Find(const Mat* SrcImage, const Mat* DstImage);
 
 	virtual void SetConfig(DETECT_OBJECT_CONFIG config, int Value);
 	virtual void SetConfig(DETECT_OBJECT_CONFIG config, double Value);
+
+protected:
+	virtual Mat* Convert2Bin(const Mat* SrcImage, Mat* DstImage);
 
 protected:
 	int mFilterSize;
