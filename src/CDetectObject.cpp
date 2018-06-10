@@ -13,6 +13,8 @@
 using namespace std;
 using namespace cv;
 
+#define DETECT_DEBUG_IMAGE_ON	(1)
+
 /**
  * Constructor with default argument.
  *
@@ -30,9 +32,11 @@ CDetectObject::CDetectObject(int FilterSize, int Thresh, int MaxValue)
  * Destructor.
  */
 CDetectObject::~CDetectObject() {
-	//destroyWindow("Gray");
-	//destroyWindow("Filtered");
-	//destroyWindow("Bin");
+#if DETECT_DEBUG_IMAGE_ON == 1
+	destroyWindow("Gray");
+	destroyWindow("Filtered");
+	destroyWindow("Bin");
+#endif	//DETECT_DEBUG_IMAGE_ON == 1
 }
 
 /**
@@ -65,10 +69,6 @@ Mat* CDetectObject::Find(const Mat* SrcImage, const Mat* DstImage) {
 		drawContours((Mat&)*DstImage, Contours, index, Scalar(0, 0, 255), 1);
 	}
 
-	//cv::imshow(cv::String("Gray"), this->mGray);
-	//cv::imshow(cv::String("Filtered"), this->mFiltered);
-	//cv::imshow(cv::String("Bin"), this->mBin);
-
 	return (Mat*)DstImage;
 }
 
@@ -90,6 +90,12 @@ Mat* CDetectObject::Convert2Bin(const Mat* SrcImage, Mat* DstImage) {
 	threshold(mFiltered, mBin, this->mThresh, this->mMaxValue, THRESH_BINARY);
 
 	this->mBin.copyTo(*DstImage);
+
+#if DETECT_DEBUG_IMAGE_ON == 1
+	cv::imshow(cv::String("Gray"), this->mGray);
+	cv::imshow(cv::String("Filtered"), this->mFiltered);
+	cv::imshow(cv::String("Bin"), this->mBin);
+#endif	//DETECT_DEBUG_IMAGE_ON == 1
 
 	return (Mat*)DstImage;
 }
