@@ -42,7 +42,13 @@ Mat* CDilateErodeObjectDetection::Convert2Bin(const Mat* SrcImage, Mat* DstImage
 	Mat BinImage;
 	Mat DilateImage;
 
-	Mat* BaseBimImage = CDetectObject::Convert2Bin(SrcImage, (Mat*)(&BinImage));
+	Mat* BaseBinImage = CDetectObject::Convert2Bin(SrcImage, (Mat*)(&BinImage));
+	if (BaseBinImage != (Mat*)(&BinImage)) {
+		cerr << "Image output err" << endl;
+
+		return NULL;
+	}
+
 
 	dilate(BinImage, DilateImage, Mat::eye(20, 20, CV_8UC1), Point(-1, -1), 5);
 	erode(DilateImage, (Mat&)(*DstImage), Mat::eye(20, 20, CV_8UC1), Point(-1, -1), 5);
