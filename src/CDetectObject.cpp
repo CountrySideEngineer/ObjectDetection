@@ -59,6 +59,8 @@ Mat* CDetectObject::Find(const Mat* SrcImage, const Mat* DstImage) {
 	ConvertedImage = this->Convert2Bin(SrcImage, (Mat*)(&BinImage));
 	if (ConvertedImage != (Mat*)(&BinImage)) {
 		cerr << "Image output err" << endl;
+
+		return NULL;
 	}
 
 	vector< vector<Point> > Contours;

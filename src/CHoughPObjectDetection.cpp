@@ -57,7 +57,6 @@ Mat* CHoughPObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 			(double)this->mRho,
 			(double)this->mTheta,
 			this->mVoteThresh);
-//			80, 30);
 
 	SrcImage->copyTo(*DstImage);
 
@@ -68,5 +67,5 @@ Mat* CHoughPObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 			cv::Scalar(0, 0, 255), 3, 8);
 	}
 
-	return NULL;
+	return (Mat*)DstImage;
 }
