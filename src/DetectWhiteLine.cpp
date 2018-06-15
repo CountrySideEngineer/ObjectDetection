@@ -13,8 +13,10 @@
 #include "opencv/cv.hpp"
 #include "opencv2/highgui.hpp"
 #include "CDetectObject.h"
+#include "CDilateErodeObjectDetection.h"
 #include "CHoughObjectDetection.h"
 #include "CHoughPObjectDetection.h"
+#include "CRoiObjectDetection.h"
 #include "CImageWindow.h"
 using namespace std;
 
@@ -56,8 +58,10 @@ int main(int argc, char** argv) {
 	}
 
 	//CDetectObject DetectObject(5, 180, 255);
-	CDetectObject *DetectObject = new CHoughPObjectDetection(FilterSize, ThreshValue, 255);
-	((CHoughPObjectDetection*)DetectObject)->SetConfig(CHoughObjectDetection::DETECT_OBJECT_HOUGH_CONFIG_THRESH, 300);
+	//CDetectObject *DetectObject = new CHoughPObjectDetection(FilterSize, ThreshValue, 255);
+	//((CHoughPObjectDetection*)DetectObject)->SetConfig(CHoughObjectDetection::DETECT_OBJECT_HOUGH_CONFIG_THRESH, 300);
+	//CDetectObject *DetectObject = new CDilateErodeObjectDetection(FilterSize, ThreshValue, 255);
+	CDetectObject *DetectObject = new CRoiObjectDetection(FilterSize, ThreshValue, 255);
 	CVideoReader VideoReader(InputFile);
 	CVideoWriter VideoWriter(OutputFile,
 			VideoReader.getImageWidth(),
