@@ -25,8 +25,18 @@ CRoiObjectDetection::CRoiObjectDetection(int FilterSize, int Thresh, int MaxValu
 	: CDilateErodeObjectDetection(FilterSize, Thresh, MaxValue) {}
 
 CRoiObjectDetection::~CRoiObjectDetection()
-{}
+{
+	destroyWindow(String("Lower right side"));
+	destroyWindow(String("Lower left side"));
+}
 
+/**
+ * Draw contours into argument TargetImage.
+ *
+ * @param[in,out]	TargetImage	Pointer to image input and detected image will
+ * 								be drawn.
+ * @return	Returns pointer to image
+ */
 Mat* CRoiObjectDetection::Find(Mat* TargetImage) {
 	Mat BinImage;
 	Mat* BinImageRet = NULL;
@@ -50,6 +60,11 @@ Mat* CRoiObjectDetection::Find(Mat* TargetImage) {
 /**
  * Detect and mark traffic object.
  * The area of handling image is limited.
+ *
+ * @paran[in]	SrcImage	Source image to scan.
+ * @param[out]	DstImage	Image detected object will be drawn.
+ * @return	Returns pointer to image the objected detected is drawn if the sequence
+ * 			has finished successfully, otherwise returns NULL.
  */
 Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 
@@ -60,19 +75,23 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 	DstImage->copyTo(DstImageCopy);
 
 	//Lower right side.
-	Rect RoiLowRight(0, 240, 320, 240);
+	Rect RoiLowRight(320, 240, 320, 240);
 	Mat DstImageRoiLowRight = DstImageCopy(RoiLowRight);
 	BinImageRet = this->Find((Mat*)(&DstImageRoiLowRight));
 	if (NULL == BinImageRet) {
 		return NULL;
 	}
 
-	Rect RoiLowLeft(320, 240, 320, 240);
+	//Lower left side.
+	Rect RoiLowLeft(0, 240, 320, 240);
 	Mat DstImageRoiLowLeft = DstImageCopy(RoiLowLeft);
 	BinImageRet = this->Find((Mat*)(&DstImageRoiLowLeft));
 	if (NULL == BinImageRet) {
 		return NULL;
 	}
+
+	imshow(String("Lower right side"), DstImageRoiLowRight);
+	imshow(String("Lower left side"), DstImageRoiLowLeft);
 
 	try {
 		DstImageCopy.copyTo(*DstImage);
