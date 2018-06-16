@@ -87,9 +87,9 @@ Mat* CDetectObject::Convert2Bin(const Mat* SrcImage, Mat* DstImage) {
 	assert(NULL != DstImage);
 
 	Size Filter(this->mFilterSize, this->mFilterSize);
-	cvtColor(*SrcImage, mGray, COLOR_BGR2GRAY);
-	blur(mGray, mFiltered, Filter);
-	threshold(mFiltered, mBin, this->mThresh, this->mMaxValue, THRESH_BINARY);
+	cvtColor(*SrcImage, this->mGray, COLOR_BGR2GRAY);
+	blur(this->mGray, this->mFiltered, Filter);
+	threshold(this->mFiltered, this->mBin, this->mThresh, this->mMaxValue, THRESH_BINARY);
 
 	this->mBin.copyTo(*DstImage);
 
