@@ -8,11 +8,13 @@
 #include <vector>
 #include "CRoiObjectDetection.h"
 #include "opencv/cv.hpp"
+#include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgcodecs.hpp"
 using namespace std;
 using namespace cv;
 
+#define DETECT_DEBUG_IMAGE_ON	(1)
 
 /**
  * Constructor with default argument.
@@ -26,8 +28,10 @@ CRoiObjectDetection::CRoiObjectDetection(int FilterSize, int Thresh, int MaxValu
 
 CRoiObjectDetection::~CRoiObjectDetection()
 {
+#if DETECT_DEBUG_IMAGE_ON == 1
 	destroyWindow(String("Lower right side"));
 	destroyWindow(String("Lower left side"));
+#endif
 }
 
 /**
@@ -85,13 +89,18 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 	//Lower left side.
 	Rect RoiLowLeft(0, 240, 320, 240);
 	Mat DstImageRoiLowLeft = DstImageCopy(RoiLowLeft);
-	BinImageRet = this->Find((Mat*)(&DstImageRoiLowLeft));
+	Mat RotateImage;
+	cv::flip(DstImageRoiLowLeft, RotateImage, 1);
+	BinImageRet = this->Find((Mat*)(&RotateImage));
 	if (NULL == BinImageRet) {
 		return NULL;
 	}
+	cv::flip(RotateImage, DstImageRoiLowLeft, 1);
 
+#if DETECT_DEBUG_IMAGE_ON == 1
 	imshow(String("Lower right side"), DstImageRoiLowRight);
-	imshow(String("Lower left side"), DstImageRoiLowLeft);
+	imshow(String("Lower left side"), RotateImage);
+#endif
 
 	try {
 		DstImageCopy.copyTo(*DstImage);
