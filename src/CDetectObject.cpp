@@ -33,9 +33,15 @@ CDetectObject::CDetectObject(int FilterSize, int Thresh, int MaxValue)
  */
 CDetectObject::~CDetectObject() {
 #if DETECT_DEBUG_IMAGE_ON == 1
-	destroyWindow("Gray");
-	destroyWindow("Filtered");
-	destroyWindow("Bin");
+	try {
+		destroyWindow("Gray");
+		destroyWindow("Filtered");
+		destroyWindow("Bin");
+	}
+	catch (exception &ex) {
+		cout << "Window has not been opened." << endl;
+		cout << ex.what() << endl;
+	}
 #endif	//DETECT_DEBUG_IMAGE_ON == 1
 }
 
