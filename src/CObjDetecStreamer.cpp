@@ -19,6 +19,16 @@ CObjDetecStreamer::CObjDetecStreamer(string InputFileName, string OutputFileName
 {}
 CObjDetecStreamer::~CObjDetecStreamer() {}
 
+/**
+ * Show object detected image.
+ * The base image is read from file.
+ *
+ * @param	DetectObject	Pointer to CDetectObject instance,
+ * @return	Result of streaming, returns 0 if the stream finished
+ * 			without error, otherwise returns minus value.
+ * 			*If error, its information is written into standard
+ * 			 terminal.
+ */
 int CObjDetecStreamer::Streaming(CDetectObject* DetectObject)
 {
 	if (this->mInputFileName.empty()||

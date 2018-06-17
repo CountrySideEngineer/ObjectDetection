@@ -1,4 +1,6 @@
-/*
+/*	//cv::String InputFile;
+	//cv::String OutputFile;
+ *
  * CDetectObject.cpp
  *
  *  Created on: 2018/05/20

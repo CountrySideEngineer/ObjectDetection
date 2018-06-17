@@ -47,11 +47,8 @@ int main(int argc, char** argv) {
 		ConfigManager.SetOption(Key, Value);
 	}
 	ConfigManager.EnableConfig();
-
-	CObjDetecStreamer Streamer(
-			ConfigManager.getInputFileName(),
-			ConfigManager.getOutputFileName());
-	Streamer.Streaming(ConfigManager.getDetectObject());
+	CObjDetecStreamer* Streamer = ConfigManager.getStreamer();
+	Streamer->Streaming(ConfigManager.getDetectObject());
 
 	return 0;
 }

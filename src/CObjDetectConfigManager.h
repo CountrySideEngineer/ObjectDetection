@@ -9,6 +9,8 @@
 #define COBJDETECTCONFIGMANAGER_H_
 #include "AConfigManager.h"
 #include "CDetectObject.h"
+#include "CObjDetecStreamer.h"
+#include "CVideoObjDetectStreamer.h"
 
 class CObjDetectConfigManager : public AConfigManager {
 public:
@@ -20,12 +22,15 @@ public:
 	CObjDetectConfigManager();
 	virtual ~CObjDetectConfigManager();
 
+	virtual CObjDetecStreamer* getStreamer() const { return this->mStreamer; }
 	virtual CDetectObject* getDetectObject() const { return this->mDetectObject; }
 	virtual string getInputFileName() const { return this->mInputFileName; }
 	virtual string getOutputFileName() const { return this->mOutputFileName; }
 
 	virtual void SetOption(string Key, string Value);
 	virtual bool EnableConfig();
+
+protected:
 
 protected:
 	enum OBJECT_DETECT_TYPE {
@@ -41,7 +46,10 @@ protected:
 	string mInputFileName;
 	string mOutputFileName;
 	CDetectObject* mDetectObject;
+	CObjDetecStreamer* mStreamer;
 	OBJECT_DETECT_TYPE mObjDetType;
+	STREAM_TYPE mStreamType;
+
 };
 
 #endif /* COBJDETECTCONFIGMANAGER_H_ */

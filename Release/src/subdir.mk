@@ -14,6 +14,7 @@ CPP_SRCS += \
 ../src/CObjDetecStreamer.cpp \
 ../src/CObjDetectConfigManager.cpp \
 ../src/CRoiObjectDetection.cpp \
+../src/CVideoObjDetectStreamer.cpp \
 ../src/CVideoReader.cpp \
 ../src/CVideoWriter.cpp \
 ../src/DetectWhiteLine.cpp 
@@ -29,6 +30,7 @@ OBJS += \
 ./src/CObjDetecStreamer.o \
 ./src/CObjDetectConfigManager.o \
 ./src/CRoiObjectDetection.o \
+./src/CVideoObjDetectStreamer.o \
 ./src/CVideoReader.o \
 ./src/CVideoWriter.o \
 ./src/DetectWhiteLine.o 
@@ -44,6 +46,7 @@ CPP_DEPS += \
 ./src/CObjDetecStreamer.d \
 ./src/CObjDetectConfigManager.d \
 ./src/CRoiObjectDetection.d \
+./src/CVideoObjDetectStreamer.d \
 ./src/CVideoReader.d \
 ./src/CVideoWriter.d \
 ./src/DetectWhiteLine.d 

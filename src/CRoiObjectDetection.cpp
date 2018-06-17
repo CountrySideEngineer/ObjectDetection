@@ -79,7 +79,12 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 	DstImage->copyTo(DstImageCopy);
 
 	//Lower right side.
-	Rect RoiLowRight(320, 240, 320, 240);
+	int Height = SrcImage->rows;
+	int Width = SrcImage->cols;
+	int HeightHalf = Height / 2;
+	int WidthHalf = Width / 2;
+
+	Rect RoiLowRight(Width, Height, WidthHalf, HeightHalf);
 	Mat DstImageRoiLowRight = DstImageCopy(RoiLowRight);
 	BinImageRet = this->Find((Mat*)(&DstImageRoiLowRight));
 	if (NULL == BinImageRet) {
@@ -87,7 +92,7 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 	}
 
 	//Lower left side.
-	Rect RoiLowLeft(0, 240, 320, 240);
+	Rect RoiLowLeft(0, Height, WidthHalf, HeightHalf);
 	Mat DstImageRoiLowLeft = DstImageCopy(RoiLowLeft);
 	Mat RotateImage;
 	cv::flip(DstImageRoiLowLeft, RotateImage, 1);

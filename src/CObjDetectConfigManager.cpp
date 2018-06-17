@@ -14,6 +14,8 @@
 #include "CHoughPObjectDetection.h"
 #include "CDilateErodeObjectDetection.h"
 #include "CRoiObjectDetection.h"
+#include "CObjDetecStreamer.h"
+#include "CVideoObjDetectStreamer.h"
 
 #define	DEFAULT_FILTER_SIZE		(3)
 #define	DEFAULT_THRESH_VALUE	(180)
@@ -25,7 +27,9 @@ CObjDetectConfigManager::CObjDetectConfigManager()
 	: mFilterSize(DEFAULT_FILTER_SIZE)
 	, mThreshValue(DEFAULT_THRESH_VALUE)
 	, mDetectObject(new CDetectObject(DEFAULT_FILTER_SIZE, DEFAULT_THRESH_VALUE, 255))
+	, mStreamer(NULL)
 	, mObjDetType(OBJECT_DETECT_TYPE_NORMAL)
+	, mStreamType(STREAM_TYPE_FILE)
 {
 }
 
@@ -36,6 +40,9 @@ CObjDetectConfigManager::~CObjDetectConfigManager()
 {
 	if (NULL != this->mDetectObject) {
 		delete this->mDetectObject;
+	}
+	if (NULL != this->mStreamer) {
+		delete this->mStreamer;
 	}
 }
 
@@ -61,6 +68,12 @@ void CObjDetectConfigManager::SetOption(string Key, string Value)
 			this->mObjDetType = OBJECT_DETECT_TYPE_DILATE_ERODE;
 		} else if (string("roi") == Value) {
 			this->mObjDetType = OBJECT_DETECT_TYPE_ROI;
+		}
+	} else if (string("-in") == Key) {
+		if (string("camera") == Value) {
+			this->mStreamType = STREAM_TYPE_CAMERA;
+		} else if (string("file") == Value) {
+			this->mStreamType = STREAM_TYPE_FILE;
 		}
 	}
 }
@@ -106,8 +119,19 @@ bool CObjDetectConfigManager::EnableConfig()
 	if ((this->mInputFileName.empty()) ||
 		(this->mOutputFileName.empty()))
 	{
-		return (bool)0;
+		return (bool)-1;
 	}
 
-	return (bool)1;
+	if (STREAM_TYPE_FILE == this->mStreamType) {
+		this->mStreamer =
+				new CObjDetecStreamer(
+						this->mInputFileName, this->mOutputFileName);
+	} else {
+		this->mStreamer =
+				new CVideoObjDetectStreamer(
+						this->mInputFileName, this->mOutputFileName);
+	}
+
+	return (bool)0;
 }
+
