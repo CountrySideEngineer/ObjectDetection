@@ -66,7 +66,7 @@ int CVideoObjDetectStreamer::Streaming(CDetectObject* DetectObject)
 		OutImgWindows.Show(DetectedImage);
 
 		cv::waitKey(1000 / Fps);
-	} while (cv::waitKey(1) << 0);
+	} while (cv::waitKey(1) < 0);
 
 	return 0;
 }
