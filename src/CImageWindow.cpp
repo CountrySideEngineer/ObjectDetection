@@ -25,8 +25,9 @@ CImageWindow::~CImageWindow() {
 			cv::destroyWindow(this->mWindowName.c_str());
 		}
 	}
-	catch (exception &e) {
+	catch (exception &ex) {
 		cout << "Window has not been opened." << endl;
+		cout << ex.what() << endl;
 	}
 }
 

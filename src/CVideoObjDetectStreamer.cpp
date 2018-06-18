@@ -44,16 +44,10 @@ int CVideoObjDetectStreamer::Streaming(CDetectObject* DetectObject)
 	int ResizeHeight = 320;
 	int ResizeWidth = 480;
 
-//	CVideoWriter Writer(this->mOutputFileName,
-//			ResizeWidth, ResizeHeight, Fps);
-
-//	Writer.About();
-
 	cv::Size ResizedImageSize(ResizeWidth, ResizeHeight);
 	cv::Mat CapturedImage;
 	cv::Mat ResizedImage;
 	cv::Mat DetectedImage(ResizeHeight, ResizeWidth, (int)CV_8UC3);
-	CImageWindow InImgWindow(string("Captured image"));
 	CImageWindow OutImgWindows(string("Detected image"));
 	do {
 		Cap >> CapturedImage;
