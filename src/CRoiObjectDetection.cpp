@@ -6,6 +6,9 @@
  */
 #include <iostream>
 #include <vector>
+#include <unistd.h>
+#include <time.h>
+#include <sys/time.h>
 #include "CRoiObjectDetection.h"
 #include "opencv/cv.hpp"
 #include "opencv2/core.hpp"
@@ -15,7 +18,7 @@ using namespace std;
 using namespace cv;
 
 #define DETECT_DEBUG_IMAGE_ON	(1)
-
+#define CALC_DETECT_TIME		(1)
 /**
  * Constructor with default argument.
  *
@@ -70,7 +73,12 @@ Mat* CRoiObjectDetection::Find(Mat* TargetImage) {
  * @return	Returns pointer to image the objected detected is drawn if the sequence
  * 			has finished successfully, otherwise returns NULL.
  */
-Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
+Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage)
+{
+#if CALC_DETECT_TIME == 1
+	timeval StartTime;
+	gettimeofday(&StartTime, NULL);
+#endif	//CALC_DETECT_TIME == 1
 
 	Mat* BinImageRet = NULL;
 
@@ -112,9 +120,15 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage) {
 	} catch (cv::Exception &ex) {
 		cerr << ex.msg << endl;
 	}
-	return (Mat*)DstImage;
-}
 
-Mat* FindContouers(Mat* TargetImage) {
-	return NULL;
+#if CALC_DETECT_TIME == 1
+	timeval EndTime;
+	gettimeofday(&EndTime, NULL);
+
+	long PassedTime = ((EndTime.tv_sec * 1000) + (EndTime.tv_usec / 1000)) -
+			((StartTime.tv_sec * 1000) + (StartTime.tv_usec / 1000));
+	cout << "Passed time = " << PassedTime << " millisecond" << endl;
+#endif	//CALC_DETECT_TIME == 1
+
+	return (Mat*)DstImage;
 }
