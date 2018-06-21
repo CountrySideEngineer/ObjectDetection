@@ -4,7 +4,9 @@
  *  Created on: 2018/06/17
  *      Author: orca2
  */
-
+#include <iostream>
+#include <time.h>
+#include <sys/time.h>
 #include "CVideoObjDetectStreamer.h"
 #include "CVideoReader.h"
 #include "opencv/cv.hpp"
@@ -13,6 +15,14 @@
 #include "opencv2/videoio.hpp"
 #include "CVideoWriter.h"
 #include "CImageWindow.h"
+
+#ifdef _DEBUG
+#define DETECT_DEBUG_IMAGE_ON	(1)
+#define CALC_DETECT_TIME		(1)
+#else
+#define DETECT_DEBUG_IMAGE_ON	(0)
+#define CALC_DETECT_TIME		(1)
+#endif
 
 CVideoObjDetectStreamer::CVideoObjDetectStreamer(
 		string InputFileName, string OutputFileName)
@@ -57,7 +67,21 @@ int CVideoObjDetectStreamer::Streaming(CDetectObject* DetectObject)
 		} else {
 			ResizedImage.copyTo(DetectedImage);
 		}
+#if CALC_DETECT_TIME == 1
+		timeval StartTime;
+		gettimeofday(&StartTime, NULL);
+#endif	//CALC_DETECT_TIME == 1
+
 		OutImgWindows.Show(DetectedImage);
+
+#if CALC_DETECT_TIME == 1
+		timeval EndTime;
+		gettimeofday(&EndTime, NULL);
+
+		long PassedTime = ((EndTime.tv_sec * 1000) + (EndTime.tv_usec / 1000)) -
+				((StartTime.tv_sec * 1000) + (StartTime.tv_usec / 1000));
+		cout << "Passed time = " << PassedTime << " millisecond" << endl;
+#endif	//CALC_DETECT_TIME == 1
 
 		cv::waitKey(1000 / Fps);
 	} while (cv::waitKey(1) < 0);

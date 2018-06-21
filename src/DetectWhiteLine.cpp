@@ -7,6 +7,7 @@
 //============================================================================
 
 #include <iostream>
+#include <time.h>
 #include "CVideoReader.h"
 #include "CVideoWriter.h"
 #include "opencv/cv.h"
