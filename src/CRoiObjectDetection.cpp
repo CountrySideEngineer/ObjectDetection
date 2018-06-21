@@ -17,8 +17,14 @@
 using namespace std;
 using namespace cv;
 
+#ifdef _DEBUG
 #define DETECT_DEBUG_IMAGE_ON	(1)
 #define CALC_DETECT_TIME		(1)
+#else
+#define DETECT_DEBUG_IMAGE_ON	(0)
+#define CALC_DETECT_TIME		(0)
+#endif
+
 /**
  * Constructor with default argument.
  *
