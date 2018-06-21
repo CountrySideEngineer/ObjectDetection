@@ -15,7 +15,11 @@
 using namespace std;
 using namespace cv;
 
+#ifdef _DEBUG
 #define DETECT_DEBUG_IMAGE_ON	(1)
+#else
+#define DETECT_DEBUG_IMAGE_ON	(0)
+#endif
 
 /**
  * Constructor with default argument.
