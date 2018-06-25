@@ -50,22 +50,32 @@ int CVideoObjDetectStreamer::Streaming(CDetectObject* DetectObject)
 
 		return -2;
 	}
-	double Fps = Cap.get(cv::CAP_PROP_FPS);
-	int ResizeHeight = 320;
-	int ResizeWidth = 480;
 
-	cv::Size ResizedImageSize(ResizeWidth, ResizeHeight);
+	int CameraConfig_Height = 480;
+	int CameraConfig_Width = 320;
+	Cap.set(CAP_PROP_FRAME_HEIGHT, CameraConfig_Height);
+	Cap.set(CAP_PROP_FRAME_WIDTH, CameraConfig_Width);
+
+	double Fps = Cap.get(cv::CAP_PROP_FPS);
+	int CapFrameHeigth = Cap.get(CAP_PROP_FRAME_HEIGHT);
+	int CapFrameWidth = Cap.get(CAP_PROP_FRAME_WIDTH);
+
+	//About
+	cout << "About camera data information to read." << endl;
+	cout << "Size of image:" << endl;
+	cout << "\theight = " << CapFrameHeigth << endl;
+	cout << "\twidth = " << CapFrameWidth << endl;
+	cout << "FPS = " << Fps << endl;
+
 	cv::Mat CapturedImage;
-	cv::Mat ResizedImage;
-	cv::Mat DetectedImage(ResizeHeight, ResizeWidth, (int)CV_8UC3);
+	cv::Mat DetectedImage(CapFrameHeigth, CapFrameWidth, (int)CV_8UC3);
 	CImageWindow OutImgWindows(string("Detected image"));
 	do {
 		Cap >> CapturedImage;
-		cv::resize(CapturedImage, ResizedImage, ResizedImageSize);
 		if (NULL != DetectObject) {
-			DetectObject->Find((const Mat*)(&ResizedImage), (const Mat*)(&DetectedImage));
+			DetectObject->Find((const Mat*)(&CapturedImage), (const Mat*)(&DetectedImage));
 		} else {
-			ResizedImage.copyTo(DetectedImage);
+			CapturedImage.copyTo(DetectedImage);
 		}
 #if CALC_DETECT_TIME == 1
 		timeval StartTime;
@@ -80,7 +90,7 @@ int CVideoObjDetectStreamer::Streaming(CDetectObject* DetectObject)
 
 		long PassedTime = ((EndTime.tv_sec * 1000) + (EndTime.tv_usec / 1000)) -
 				((StartTime.tv_sec * 1000) + (StartTime.tv_usec / 1000));
-		cout << "Passed time = " << PassedTime << " millisecond" << endl;
+		cout << "Video Stream - Passed time = " << PassedTime << " millisecond" << endl;
 #endif	//CALC_DETECT_TIME == 1
 
 		cv::waitKey(1000 / Fps);
