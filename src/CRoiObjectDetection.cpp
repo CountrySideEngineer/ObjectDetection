@@ -22,7 +22,7 @@ using namespace cv;
 #define CALC_DETECT_TIME		(1)
 #else
 #define DETECT_DEBUG_IMAGE_ON	(0)
-#define CALC_DETECT_TIME		(0)
+#define CALC_DETECT_TIME		(1)
 #endif
 
 /**
@@ -89,17 +89,13 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage)
 	Mat* BinImageRet = NULL;
 
 	SrcImage->copyTo(*DstImage);
-	Mat DstImageCopy;
-	DstImage->copyTo(DstImageCopy);
 
 	//Lower right side.
-	int Height = SrcImage->rows;
-	int Width = SrcImage->cols;
-	int HeightHalf = Height / 2;
-	int WidthHalf = Width / 2;
+	int HeightHalf = SrcImage->rows / 2;
+	int WidthHalf = SrcImage->cols / 2;
 
 	Rect RoiLowRight(WidthHalf, HeightHalf, WidthHalf, HeightHalf);
-	Mat DstImageRoiLowRight = DstImageCopy(RoiLowRight);
+	Mat DstImageRoiLowRight = (Mat)(*DstImage)(RoiLowRight);
 	BinImageRet = this->Find((Mat*)(&DstImageRoiLowRight));
 	if (NULL == BinImageRet) {
 		return NULL;
@@ -107,7 +103,7 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage)
 
 	//Lower left side.
 	Rect RoiLowLeft(0, HeightHalf, WidthHalf, HeightHalf);
-	Mat DstImageRoiLowLeft = DstImageCopy(RoiLowLeft);
+	Mat DstImageRoiLowLeft = (Mat)(*DstImage)(RoiLowLeft);
 	Mat RotateImage;
 	cv::flip(DstImageRoiLowLeft, RotateImage, 1);
 	BinImageRet = this->Find((Mat*)(&RotateImage));
@@ -115,17 +111,6 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage)
 		return NULL;
 	}
 	cv::flip(RotateImage, DstImageRoiLowLeft, 1);
-
-#if DETECT_DEBUG_IMAGE_ON == 1
-	imshow(String("Lower right side"), DstImageRoiLowRight);
-	imshow(String("Lower left side"), RotateImage);
-#endif
-
-	try {
-		DstImageCopy.copyTo(*DstImage);
-	} catch (cv::Exception &ex) {
-		cerr << ex.msg << endl;
-	}
 
 #if CALC_DETECT_TIME == 1
 	timeval EndTime;
@@ -135,6 +120,10 @@ Mat* CRoiObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage)
 			((StartTime.tv_sec * 1000) + (StartTime.tv_usec / 1000));
 	cout << "Passed time = " << PassedTime << " millisecond" << endl;
 #endif	//CALC_DETECT_TIME == 1
+#if DETECT_DEBUG_IMAGE_ON == 1
+	imshow(String("Lower right side"), DstImageRoiLowRight);
+	imshow(String("Lower left side"), DstImageRoiLowLeft);
+#endif
 
 	return (Mat*)DstImage;
 }

@@ -11,6 +11,7 @@ CPP_SRCS += \
 ../src/CHoughObjectDetection.cpp \
 ../src/CHoughPObjectDetection.cpp \
 ../src/CImageWindow.cpp \
+../src/CLineSepObjectDetection.cpp \
 ../src/CObjDetecStreamer.cpp \
 ../src/CObjDetectConfigManager.cpp \
 ../src/CRoiObjectDetection.cpp \
@@ -27,6 +28,7 @@ OBJS += \
 ./src/CHoughObjectDetection.o \
 ./src/CHoughPObjectDetection.o \
 ./src/CImageWindow.o \
+./src/CLineSepObjectDetection.o \
 ./src/CObjDetecStreamer.o \
 ./src/CObjDetectConfigManager.o \
 ./src/CRoiObjectDetection.o \
@@ -43,6 +45,7 @@ CPP_DEPS += \
 ./src/CHoughObjectDetection.d \
 ./src/CHoughPObjectDetection.d \
 ./src/CImageWindow.d \
+./src/CLineSepObjectDetection.d \
 ./src/CObjDetecStreamer.d \
 ./src/CObjDetectConfigManager.d \
 ./src/CRoiObjectDetection.d \

@@ -16,7 +16,7 @@
 #include "CRoiObjectDetection.h"
 #include "CObjDetecStreamer.h"
 #include "CVideoObjDetectStreamer.h"
-
+#include "CLineSepObjectDetection.h"
 #define	DEFAULT_FILTER_SIZE		(3)
 #define	DEFAULT_THRESH_VALUE	(180)
 
@@ -68,6 +68,8 @@ void CObjDetectConfigManager::SetOption(string Key, string Value)
 			this->mObjDetType = OBJECT_DETECT_TYPE_DILATE_ERODE;
 		} else if (string("roi") == Value) {
 			this->mObjDetType = OBJECT_DETECT_TYPE_ROI;
+		} else if (string("spl") == Value) {
+			this->mObjDetType = OBJECT_DETECT_TYPE_SPLIT;
 		}
 	} else if (string("-in") == Key) {
 		if (string("camera") == Value) {
@@ -101,6 +103,7 @@ bool CObjDetectConfigManager::EnableConfig()
 		SET_DETECT_OBJECT(OBJECT_DETECT_TYPE_HOUGHP, CHoughPObjectDetection);
 		SET_DETECT_OBJECT(OBJECT_DETECT_TYPE_DILATE_ERODE, CDilateErodeObjectDetection);
 		SET_DETECT_OBJECT(OBJECT_DETECT_TYPE_ROI, CRoiObjectDetection);
+		SET_DETECT_OBJECT(OBJECT_DETECT_TYPE_SPLIT, CLineSepObjectDetection);
 	}
 
 	if (NULL != DetectObject) {
