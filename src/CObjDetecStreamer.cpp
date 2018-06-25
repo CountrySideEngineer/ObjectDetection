@@ -60,7 +60,6 @@ int CObjDetecStreamer::Streaming(CDetectObject* DetectObject)
 	CImageWindow InImgWindow(string("Captured image"));
 	CImageWindow OutImgWindows(string("Detected image"));
 	for (int index = 0; index < Reader.getImageFrameNum(); index++) {
-
 		CapturedImage = Reader.Read();
 		if (NULL != DetectObject) {
 			DetectObject->Find((const Mat*)(&CapturedImage), (const Mat*)(&DetectedImage));
