@@ -51,8 +51,8 @@ int CVideoObjDetectStreamer::Streaming(CDetectObject* DetectObject)
 		return -2;
 	}
 
-	int CameraConfig_Height = 480;
-	int CameraConfig_Width = 320;
+	int CameraConfig_Height = 320;
+	int CameraConfig_Width = 240;
 	Cap.set(CAP_PROP_FRAME_HEIGHT, CameraConfig_Height);
 	Cap.set(CAP_PROP_FRAME_WIDTH, CameraConfig_Width);
 
