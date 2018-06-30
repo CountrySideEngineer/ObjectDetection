@@ -42,7 +42,7 @@ Mat* CLineSepObjectDetection::Find(Mat* TargetImage) {
 	}
 
 	vector< vector<Point> > Contours;
-	findContours(BinImage, Contours, CV_RETR_LIST, CHAIN_APPROX_SIMPLE);
+	findContours(BinImage, Contours, CV_RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 	for (unsigned int index = 0; index < Contours.size(); index++) {
 		drawContours((Mat&)(*TargetImage), Contours, index, Scalar(0, 0, 255), 5);
 	}
@@ -50,19 +50,36 @@ Mat* CLineSepObjectDetection::Find(Mat* TargetImage) {
 	return TargetImage;
 }
 
-
+/**
+ *	Find object, especially white line, and draw their contours with red line.
+ *
+ *	@param[in]	SrcImage	Source image.
+ *	@param[out]	DstImage	Image object detected.
+ *	@return Pointer to image the object detected.
+ */
 Mat* CLineSepObjectDetection::Find(const Mat* SrcImage, const Mat* DstImage)
 {
 	SrcImage->copyTo(*DstImage);
 
-	int SplitIndex = SrcImage->rows / 2;
-	int HeightSection = SrcImage->rows / 10;
-	int WidthSection = SrcImage->cols;
-	for (int index = 0; index < 5; index++) {
-		Rect Roi(0, SplitIndex, WidthSection, HeightSection);
-		Mat DstImageRoi = (Mat)(*DstImage)(Roi);
-		this->Find((Mat*)(&DstImageRoi));
-		SplitIndex += HeightSection;
+#define IMAGE_SPLIT_NUM		(20)
+#define IMAGE_DETECT_AREA_NUM	(IMAGE_SPLIT_NUM / 2)
+
+	int SplitIndex = SrcImage->rows >> 1;		//Divide by 2
+	int SectionHeight = SrcImage->rows / IMAGE_SPLIT_NUM;
+	int SectionWidth = SrcImage->cols >> 1;		//Divide by 2
+	for (int index = 0; index < IMAGE_DETECT_AREA_NUM; index++) {
+		Rect LeftRoi(0, SplitIndex, SectionWidth, SectionHeight);
+		Mat DstImageLeftRoi = (Mat)(*DstImage)(LeftRoi);
+		Mat RotateImage;
+		flip(DstImageLeftRoi, RotateImage, 1);
+		this->Find((Mat*)(&RotateImage));
+		flip(RotateImage, DstImageLeftRoi, 1);
+
+		Rect RightRoi(SectionWidth, SplitIndex, SectionWidth, SectionHeight);
+		Mat DstImageRightRoi = (Mat)(*DstImage)(RightRoi);
+		this->Find((Mat*)(&DstImageRightRoi));
+
+		SplitIndex += SectionHeight;
 	}
 
 	return (Mat*)DstImage;
